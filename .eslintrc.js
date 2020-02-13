@@ -23,6 +23,8 @@ module.exports = {
   ],
   rules: {
     "import/prefer-default-export": "off",
-    "linebreak-style": "off"
+    "linebreak-style": "off",
+    "react/prop-types": "off",
+    "react/jsx-filename-extension": "off",
   },
 };
