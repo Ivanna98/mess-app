@@ -1,19 +1,36 @@
 import React from 'react';
-import sc from 'socket.io-client';
+import io from 'socket.io-client';
+import { SocketApi } from '../services/socketApi';
 
-export const Chat = () => {
-  const [done, setDone] = React.useState('Nothing');
-  const token = localStorage.getItem('auth');
-  const onConnect = React.useCallback(() => {
-    const socket = sc.connect('http://localhost:3002');
-    socket.on('connection', (sock) => {
-      sock
-        .on('authenticated', () => setDone('cool'))
-        .emit('auth', { token });
-    });
-  }, []);
-  React.useEffect(() => onConnect());
-  return (
-    <div>{done}</div>
-  );
-};
+export class Chat extends React.Component {
+  componentDidMount() {
+    SocketApi.connect();
+  }
+
+  render() {
+    const token = localStorage.getItem('auth');
+    return (
+      <div>
+        {token}
+      </div>
+    );
+  }
+}
+
+// export const Chat = () => {
+//   const [done, setDone] = React.useState('');
+//   const token = localStorage.getItem('auth');
+
+//   React.useEffect(() => {
+//     SocketApi.connect();
+
+//     setDone('success');
+//   }, [token]);
+//   return (
+//     <div>
+//       <div>{done}</div>
+//       <div>{token}</div>
+//     </div>
+
+//   );
+// };
