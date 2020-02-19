@@ -1,0 +1,19 @@
+.general-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3b4c63;
+  min-width: 100vh;
+  height: 100vh;
+  .app {
+  background-color: rgb(199, 205, 255);
+  box-shadow: 0 0 10px rgb(8, 22, 32);
+  height: 90vh;
+  width: 80%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+}
