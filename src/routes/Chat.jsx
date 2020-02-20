@@ -11,16 +11,15 @@ export const Chat = ({ history }) => {
   const [done, setDone] = React.useState('');
   const token = localStorage.getItem('auth');
 
-  // const onClick = React.useCallback((msg) => {
-  //   SocketApi.io.emit('message', msg);
-  //   setValue('');
-  // }, []);
+  const onClick = React.useCallback(() => {
+    SocketApi.io.emit('message', value);
+    setValue('');
+  }, []);
 
   const onChange = React.useCallback((e) => {
     SocketApi.io.emit('typing');
     setValue(e.target.value);
   }, []);
-
 
   React.useEffect(() => {
     if (token) {
@@ -35,14 +34,13 @@ export const Chat = ({ history }) => {
     <div>
       <BrowserRouter>
         <Switch>
-          {/* <Route exact path="/info" component={} /> */}
           <Route exact path="/channels" component={Channels} />
           <Redirect exact to="/channels" />
         </Switch>
       </BrowserRouter>
 
       <input placeholder="Enter your message" value={value} onChange={onChange} />
-      <Button>Send</Button>
+      <Button onClick={onClick}>Send</Button>
 
       <div>{done}</div>
       <div>{token}</div>
