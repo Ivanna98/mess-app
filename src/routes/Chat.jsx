@@ -1,25 +1,14 @@
 import React from 'react';
-import { Button } from 'semantic-ui-react';
 import {
   Switch, Route, BrowserRouter, Redirect,
 } from 'react-router-dom';
 import { SocketApi } from '../services/socketApi';
 import { Channels } from './Channels';
+import { UserInfo } from '../components/userInfo';
 
 export const Chat = ({ history }) => {
-  const [value, setValue] = React.useState('');
   const [done, setDone] = React.useState('');
   const token = localStorage.getItem('auth');
-
-  const onClick = React.useCallback(() => {
-    SocketApi.io.emit('message', value);
-    setValue('');
-  }, []);
-
-  const onChange = React.useCallback((e) => {
-    SocketApi.io.emit('typing');
-    setValue(e.target.value);
-  }, []);
 
   React.useEffect(() => {
     if (token) {
@@ -35,13 +24,10 @@ export const Chat = ({ history }) => {
       <BrowserRouter>
         <Switch>
           <Route exact path="/channels" component={Channels} />
+          <Route exact path="/info" component={UserInfo} />
           <Redirect exact to="/channels" />
         </Switch>
       </BrowserRouter>
-
-      <input placeholder="Enter your message" value={value} onChange={onChange} />
-      <Button onClick={onClick}>Send</Button>
-
       <div>{done}</div>
       <div>{token}</div>
     </div>
