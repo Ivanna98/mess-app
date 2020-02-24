@@ -7,39 +7,48 @@ import { SocketApi } from '../services/socketApi';
 export const Channels = ({ match }) => {
   const [title, setTitle] = React.useState('');
   const [channels, setChannels] = React.useState([]);
-  SocketApi.io.on('addedChannel', (channel) => {
-    setChannels(channels.push(channel));
-  });
+  const [newChannel, setNewChannel] = React.useState(0);
+
   const onChange = React.useCallback((e) => {
     setTitle(e.target.value);
   }, []);
-  const onClick = React.useCallback(() => {
-    SocketApi.io.emit('newChannel', title);
+  const onClick = React.useCallback(async () => {
+    await Axios.post('http://localhost:3002/channels', { title });
+    SocketApi.io.emit('newChannel');
     setTitle('');
-  }, []);
+  }, [title]);
   const onFetch = React.useCallback(async () => {
     try {
-      const data = await Axios.get('http://localhost:3002/channels');
-      setChannels(data);
+      const { data } = await Axios.get('http://localhost:3002/channels');
+      setChannels(data.channels);
     } catch (error) {
       console.log(error);
     }
   }, []);
+
+
   React.useEffect(() => {
     onFetch();
-  }, []);
+    SocketApi.io.on('addedChannel', () => {
+      onFetch();
+      setNewChannel(newChannel + 1);
+    });
+  }, [newChannel]);
   return (
     <div>
       <section>
-        <input onChange={onChange} placeholder="Enter title new channel" />
+        <input onChange={onChange} value={title} placeholder="Enter title new channel" />
         <Button onClick={onClick}>Create</Button>
+        <div>{title}</div>
       </section>
       <section>
-        {channels.map((channel) => (
-          <Link to={`${matchMedia.url}/${channel._id}`} key={channel._id}>
-            <div>{channel.title}</div>
-          </Link>
-        ))}
+        {
+          (channels || []).map((channel) => (
+            <Link to={`${matchMedia.url}/${channel._id}`} key={channel._id}>
+              <div>{channel.title}</div>
+            </Link>
+          ))
+        }
         <Route path={`${match.path}/:channelId`} />
       </section>
     </div>
