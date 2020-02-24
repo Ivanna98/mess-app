@@ -16,7 +16,7 @@ export const App = () => (
           <Route exact path="/login" component={Login} />
           <Route exact path="/success" component={SuccessLogin} />
           <Route exact path="/chat" component={Chat} />
-          <Redirect exact to="/login" />
+          <Redirect exact to="/chat" />
         </Switch>
       </BrowserRouter>
     </div>

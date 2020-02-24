@@ -4,7 +4,7 @@ import { Button } from 'semantic-ui-react';
 import { Message } from './message';
 import { SocketApi } from '../services/socketApi';
 
-export const channel = ({ match }) => {
+export const Channel = ({ match }) => {
   const [messValue, setMessValue] = React.useState('');
   const [messages, setMessages] = React.useState([]);
   const { channelId } = match.params;

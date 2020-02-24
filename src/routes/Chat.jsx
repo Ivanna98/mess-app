@@ -7,13 +7,11 @@ import { Channels } from './Channels';
 import { UserInfo } from '../components/userInfo';
 
 export const Chat = ({ history }) => {
-  const [done, setDone] = React.useState('');
   const token = localStorage.getItem('auth');
 
   React.useEffect(() => {
     if (token) {
       SocketApi.connect(token);
-      setDone('success');
     } else {
       history.push('/login');
     }
@@ -28,8 +26,6 @@ export const Chat = ({ history }) => {
           <Redirect exact to="/channels" />
         </Switch>
       </BrowserRouter>
-      <div>{done}</div>
-      <div>{token}</div>
     </div>
 
   );
