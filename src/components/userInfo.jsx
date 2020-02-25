@@ -8,7 +8,7 @@ export const UserInfo = ({ match }) => {
     const data = await Axios.get(`http://localhost:3002/user/${id}`);
     setUserData(data);
   }, [id]);
-  React.useEffect(() => onFetch(), []);
+  React.useEffect(() => onFetch(), [onFetch]);
   return (
     <div>
       <div className="profilePicture" style={{ backgroundImage: `url(${userData.picture})` }} />

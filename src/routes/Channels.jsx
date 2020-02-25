@@ -15,6 +15,7 @@ export const Channels = ({ match }) => {
   const onChange = React.useCallback((e) => {
     setTitle(e.target.value);
   }, []);
+
   const onClick = React.useCallback(() => {
     SocketApi.io.emit('newChannel', { title });
     setTitle('');
@@ -27,7 +28,7 @@ export const Channels = ({ match }) => {
     } catch (error) {
       console.log(error);
     }
-  }, [newChannel]);
+  }, []);
 
 
   React.useEffect(() => {
@@ -36,7 +37,8 @@ export const Channels = ({ match }) => {
       setChannels([...channels, addedChannel]);
       setNewChannel(addedChannel);
     });
-  }, [newChannel]);
+  }, [newChannel, onFetch]);
+
   return (
     <div className="d-flex flex-column justify-content-center h-100 ">
       <section className="w-100">

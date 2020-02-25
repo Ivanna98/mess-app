@@ -9,29 +9,40 @@ export const Channel = ({ match }) => {
   const [messages, setMessages] = React.useState([]);
   const [newMess, setNewMess] = React.useState({});
   const { channelId } = match.params;
+
   const onClick = React.useCallback(() => {
     SocketApi.io.emit('message', { messValue, channelId });
     setMessValue('');
-  }, [messValue]);
+  }, [messValue, channelId]);
+
   const onChange = React.useCallback((e) => {
     setMessValue(e.target.value);
   }, []);
+
   const onFetch = React.useCallback(async () => {
     const { data } = await Axios.get(`http://localhost:3002/message?channel=${channelId}`);
-    setMessages(data);
-  }, []);
+    setMessages(data.messages);
+  }, [channelId]);
+
   React.useEffect(() => {
     onFetch();
-    SocketApi.io.on('addedMess', (addedMess) => {
+    SocketApi.io.on('addedMess', ({ addedMess }) => {
       setMessages([...messages, addedMess]);
       setNewMess(addedMess);
     });
-  }, [newMess]);
+  }, [newMess, onFetch]);
+
   return (
     <div>
       <div className="wrapper-channel">
-        {messages.map((message) => (
-          <Message user={message.author} text={message.text} time={message.createdAt} />
+        {(messages || []).map((message) => (
+          <div key={message._id}>
+            <Message
+              user={message.author}
+              text={message.text}
+              time={message.createdAt}
+            />
+          </div>
         ))}
       </div>
       <div>

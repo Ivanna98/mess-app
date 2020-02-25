@@ -12,10 +12,10 @@ export const Chat = ({ history, match }) => {
   React.useEffect(() => {
     if (token && !SocketApi.io) {
       SocketApi.connect(token);
-    } else if (!token) {
+    } else {
       history.push('/login');
     }
-  }, []);
+  }, [history, token]);
 
   return (
     <div>
