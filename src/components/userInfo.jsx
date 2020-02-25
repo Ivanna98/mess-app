@@ -7,7 +7,7 @@ export const UserInfo = ({ match }) => {
   const onFetch = React.useCallback(async () => {
     const data = await Axios.get(`http://localhost:3002/user/${id}`);
     setUserData(data);
-  }, []);
+  }, [id]);
   React.useEffect(() => onFetch(), []);
   return (
     <div>

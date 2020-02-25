@@ -1,6 +1,8 @@
 import React from 'react';
 import Axios from 'axios';
-import { Link, Route } from 'react-router-dom';
+import {
+  Link, Route,
+} from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import { SocketApi } from '../services/socketApi';
 import { Channel } from '../components/channel';
@@ -42,15 +44,18 @@ export const Channels = ({ match }) => {
         <Button onClick={onClick}>Create</Button>
         <div>{title}</div>
       </section>
+      <div>{`${match.path}/:channelId`}</div>
       <section className="w-100">
         {
           (channels || []).map((channel) => (
-            <Link to={`${matchMedia.url}/${channel._id}`} key={channel._id}>
+            <Link to={`${match.url}/${channel._id}`} key={channel._id}>
               <div>{channel.title}</div>
             </Link>
           ))
         }
+
         <Route path={`${match.path}/:channelId`} component={Channel} />
+
       </section>
     </div>
 

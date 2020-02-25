@@ -1,31 +1,29 @@
 import React from 'react';
 import {
-  Switch, Route, BrowserRouter, Redirect,
+  Switch, Route, Redirect,
 } from 'react-router-dom';
 import { SocketApi } from '../services/socketApi';
 import { Channels } from './Channels';
 import { UserInfo } from '../components/userInfo';
 
-export const Chat = ({ history }) => {
+export const Chat = ({ history, match }) => {
   const token = localStorage.getItem('auth');
 
   React.useEffect(() => {
-    if (token) {
+    if (token && !SocketApi.io) {
       SocketApi.connect(token);
-    } else {
+    } else if (!token) {
       history.push('/login');
     }
-  }, [token, history]);
+  }, []);
 
   return (
     <div>
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/channels" component={Channels} />
-          <Route exact path="/info" component={UserInfo} />
-          <Redirect exact to="/channels" />
-        </Switch>
-      </BrowserRouter>
+      <Switch>
+        <Route path={`${match.path}/channels`} component={Channels} />
+        <Route exact path="/info" component={UserInfo} />
+        <Redirect to={`${match.path}/channels`} />
+      </Switch>
     </div>
 
   );
