@@ -17,3 +17,22 @@
   justify-content: center;
 }
 }
+.chatWrapper {
+  height: 85%;
+}
+i.icon.circle {
+  color: green;
+}
+
+i.icon.circle.outline {
+  color: red;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  margin-top:5px;
+}
+::-webkit-scrollbar-thumb {
+  background:rgb(107, 110, 119);
+  border-radius: 3px;
+}

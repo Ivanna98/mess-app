@@ -1,0 +1,41 @@
+.channelsWrapper {
+  width: 30%;
+  background-color: #3b4c63;
+  border-radius: 10px;
+  .channelTitleItem {
+    width: 100%;
+    max-width: 175px;
+    height: 40px;
+  }
+  .newChannel {
+    input {
+      width: 70%;
+    }
+    button {
+      width: 30%;
+    }
+}
+}
+
+.wrapperChannel {
+  width: 60%;
+  height: 100%;
+}
+
+.wrapperMess {
+  overflow-y: auto;
+  height: 90%;
+}
+
+.sendMess {
+  textarea  {
+    height: 42px;
+    margin-right: 7px !important;
+  }
+}
+
+.active {
+  .channelTitleItem {
+    background-color: lightslategray;
+  }
+}

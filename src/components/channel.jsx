@@ -1,6 +1,8 @@
 import React from 'react';
 import Axios from 'axios';
-import { Button } from 'semantic-ui-react';
+import {
+  Button, Item, TextArea, Form,
+} from 'semantic-ui-react';
 import { Message } from './message';
 import { SocketApi } from '../services/socketApi';
 
@@ -9,7 +11,6 @@ export const Channel = ({ match }) => {
   const [messages, setMessages] = React.useState([]);
   const [newMess, setNewMess] = React.useState({});
   const { channelId } = match.params;
-
   const onClick = React.useCallback(() => {
     SocketApi.io.emit('message', { messValue, channelId });
     setMessValue('');
@@ -33,8 +34,9 @@ export const Channel = ({ match }) => {
   }, [newMess, onFetch]);
 
   return (
-    <div>
-      <div className="wrapper-channel">
+
+    <div className="h-100">
+      <Item.Group className="wrapperMess pr-4">
         {(messages || []).map((message) => (
           <div key={message._id}>
             <Message
@@ -44,12 +46,13 @@ export const Channel = ({ match }) => {
             />
           </div>
         ))}
-      </div>
-      <div>
-        <input onChange={onChange} value={messValue} placeholder="Enter your message" />
-        <Button onClick={onClick}>Send</Button>
-      </div>
-    </div>
+      </Item.Group>
 
+      <Form className="w-100 d-flex justify-content-around sendMess">
+        <TextArea onChange={onChange} value={messValue} placeholder="Enter your message" />
+        <Button onClick={onClick}>Send</Button>
+      </Form>
+
+    </div>
   );
 };
