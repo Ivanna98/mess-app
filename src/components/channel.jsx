@@ -31,6 +31,7 @@ export const Channel = ({ match }) => {
       setMessages([...messages, addedMess]);
       setNewMess(addedMess);
     });
+    return () => SocketApi.io.off('addedMess');
   }, [newMess, onFetch]);
 
   return (

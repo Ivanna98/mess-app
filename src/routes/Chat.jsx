@@ -21,7 +21,7 @@ export const Chat = ({ history, match }) => {
     } else {
       history.push('/login');
     }
-  }, [history, token]);
+  }, [token]);
 
   return (
     <div className="w-100 h-100">
@@ -35,7 +35,7 @@ export const Chat = ({ history, match }) => {
           loading ? (<Dimmer><Loader /></Dimmer>) : (
             <Switch>
               <Route path={`${match.path}/channels`} component={Channels} />
-              <Route exact path="/info" component={UserInfo} />
+              <Route path={`${match.path}/info/:id`} component={UserInfo} />
               <Redirect to={`${match.path}/channels`} />
             </Switch>
           )

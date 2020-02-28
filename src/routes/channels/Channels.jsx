@@ -40,7 +40,10 @@ export const Channels = ({ match }) => {
       setChannels([...channels, addedChannel]);
       setNewChannel(addedChannel);
     });
-  }, [newChannel, onFetch]);
+    return () => {
+      SocketApi.io.off('addedChannel');
+    };
+  }, [newChannel]);
 
   return (
     <div className="d-flex justify-content-around h-100 w-100 ">
@@ -53,7 +56,7 @@ export const Channels = ({ match }) => {
         <section className="w-100 channels">
           {
             (channels || []).map((channel) => (
-              <Menu.Item as={Link} activeClassName="active" to={`${match.url}/${channel._id}`} key={channel._id}>
+              <Menu.Item as={Link} to={`${match.url}/${channel._id}`} key={channel._id}>
                 <Card className="channelTitleItem m-3 p-2">{channel.title}</Card>
               </Menu.Item>
             ))
