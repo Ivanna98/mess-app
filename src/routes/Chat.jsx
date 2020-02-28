@@ -5,23 +5,42 @@ import {
 import {
   Header, Icon, Loader, Dimmer,
 } from 'semantic-ui-react';
+import Axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 import { SocketApi } from '../services/socketApi';
 import { Channels } from './channels/Channels';
 import { UserInfo } from '../components/userInfo';
+import { Notification } from '../components/notification';
 
 export const Chat = ({ history, match }) => {
   const token = localStorage.getItem('auth');
   const [loading, setLoading] = React.useState(true);
+  const [channelMess, setChannelMess] = React.useState({});
+  const [id, setId] = React.useState('');
+
+  const fetchChannel = React.useCallback(async () => {
+    const { channel } = await Axios.get(`http://localhost:3002/channels/${id}`);
+    setChannelMess(channel);
+  }, []);
 
   React.useEffect(() => {
     setLoading(true);
     if (token && !SocketApi.io) {
       SocketApi.connect(token);
       setLoading(false);
-    } else {
+    } else if (!token) {
       history.push('/login');
     }
-  }, [token]);
+    if (SocketApi.io) {
+      SocketApi.io.on('addedMessChannel', ({ addedMess, channelId }) => {
+        setId(channelId);
+        fetchChannel();
+        console.log(channelMess);
+        toast(<Notification channel={channelMess} msg={addedMess} />);
+      });
+    }
+    return () => SocketApi.io.off('addedMessChannel');
+  }, [token, channelMess]);
 
   return (
     <div className="w-100 h-100">
@@ -42,7 +61,7 @@ export const Chat = ({ history, match }) => {
         }
 
       </section>
-
+      <ToastContainer />
     </div>
 
   );
