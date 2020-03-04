@@ -32,10 +32,11 @@ export const Channel = ({ match }) => {
       setUserStatus({ user, onlineStatus });
     });
     return () => SocketApi.io.off('updateOnlineStatus');
-  }, [channelId, userStatus]);
+  }, [channelId, userStatus, onFetch]);
 
   React.useEffect(() => {
     SocketApi.io.on('addedMess', ({ addedMess }) => {
+      console.log(addedMess);
       setMessages([...messages, addedMess]);
       setNewMess(addedMess);
     });

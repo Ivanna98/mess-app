@@ -7,12 +7,16 @@ import {
 export const UserInfo = ({ match, history }) => {
   const [userData, setUserData] = React.useState({});
   const { id } = match.params;
-  const onClick = React.useCallback(() => history.push('/chat/channels'), []);
+
+  const onClick = React.useCallback(() => history.push('/chat/channels'), [history]);
+
   const onFetch = React.useCallback(async () => {
     const { data } = await Axios.get(`http://localhost:3002/user/${id}`);
     setUserData(data.user);
-  }, []);
-  React.useEffect(() => { onFetch(); }, []);
+  }, [id]);
+
+  React.useEffect(() => { onFetch(); }, [onFetch]);
+
   return (
     <div className="h-100 w-100 d-flex flex-column align-items-center justify-content-center">
       <Card>

@@ -36,7 +36,7 @@ export const Channels = ({ match }) => {
 
   React.useEffect(() => {
     onFetch();
-  }, []);
+  }, [onFetch]);
 
   React.useEffect(() => {
     SocketApi.io.on('addedChannel', (addedChannel) => {
