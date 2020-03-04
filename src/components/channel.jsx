@@ -27,12 +27,14 @@ export const Channel = ({ match }) => {
 
   React.useEffect(() => {
     onFetch();
+  }, []);
+  React.useEffect(() => {
     SocketApi.io.on('addedMess', ({ addedMess }) => {
       setMessages([...messages, addedMess]);
       setNewMess(addedMess);
     });
     return () => SocketApi.io.off('addedMess');
-  }, [newMess, onFetch]);
+  }, [newMess, messages]);
 
   return (
 

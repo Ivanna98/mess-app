@@ -16,11 +16,10 @@ export const Chat = ({ history, match }) => {
   const token = localStorage.getItem('auth');
   const [loading, setLoading] = React.useState(true);
   const [channelMess, setChannelMess] = React.useState({});
-  const [id, setId] = React.useState('');
 
-  const fetchChannel = React.useCallback(async () => {
-    const { channel } = await Axios.get(`http://localhost:3002/channels/${id}`);
-    setChannelMess(channel);
+  const fetchChannel = React.useCallback(async (channelId) => {
+    const { data } = await Axios.get(`http://localhost:3002/channels/${channelId}`);
+    setChannelMess(data.channel);
   }, []);
 
   React.useEffect(() => {
@@ -31,16 +30,17 @@ export const Chat = ({ history, match }) => {
     } else if (!token) {
       history.push('/login');
     }
+  }, [token]);
+
+  React.useEffect(() => {
     if (SocketApi.io) {
       SocketApi.io.on('addedMessChannel', ({ addedMess, channelId }) => {
-        setId(channelId);
-        fetchChannel();
-        console.log(channelMess);
+        fetchChannel(channelId);
         toast(<Notification channel={channelMess} msg={addedMess} />);
       });
     }
     return () => SocketApi.io.off('addedMessChannel');
-  }, [token, channelMess]);
+  }, [channelMess, fetchChannel]);
 
   return (
     <div className="w-100 h-100">
@@ -63,6 +63,5 @@ export const Chat = ({ history, match }) => {
       </section>
       <ToastContainer />
     </div>
-
   );
 };

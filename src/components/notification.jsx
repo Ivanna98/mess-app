@@ -5,7 +5,7 @@ export const Notification = ({ channel, msg }) => (
   <Item>
     <Image
       floated="left"
-      size="massive"
+      size="medium"
       src={msg.author.picture}
       avatar
     />

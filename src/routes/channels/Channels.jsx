@@ -36,9 +36,12 @@ export const Channels = ({ match }) => {
 
   React.useEffect(() => {
     onFetch();
+  }, []);
+
+  React.useEffect(() => {
     SocketApi.io.on('addedChannel', (addedChannel) => {
       setChannels([...channels, addedChannel]);
-      setNewChannel(addedChannel);
+      setNewChannel(addedChannel, channels);
     });
     return () => {
       SocketApi.io.off('addedChannel');
