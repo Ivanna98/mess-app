@@ -41,12 +41,12 @@ export const Channels = ({ match }) => {
   React.useEffect(() => {
     SocketApi.io.on('addedChannel', (addedChannel) => {
       setChannels([...channels, addedChannel]);
-      setNewChannel(addedChannel, channels);
+      setNewChannel(addedChannel);
     });
     return () => {
       SocketApi.io.off('addedChannel');
     };
-  }, [newChannel]);
+  }, [newChannel, channels]);
 
   return (
     <div className="d-flex justify-content-around h-100 w-100 ">

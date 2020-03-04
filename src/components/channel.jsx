@@ -10,6 +10,7 @@ export const Channel = ({ match }) => {
   const [messValue, setMessValue] = React.useState('');
   const [messages, setMessages] = React.useState([]);
   const [newMess, setNewMess] = React.useState({});
+  const [userStatus, setUserStatus] = React.useState();
   const { channelId } = match.params;
   const onClick = React.useCallback(() => {
     SocketApi.io.emit('message', { messValue, channelId });
@@ -27,7 +28,12 @@ export const Channel = ({ match }) => {
 
   React.useEffect(() => {
     onFetch();
-  }, []);
+    SocketApi.io.on('updateOnlineStatus', ({ user, onlineStatus }) => {
+      setUserStatus({ user, onlineStatus });
+    });
+    return () => SocketApi.io.off('updateOnlineStatus');
+  }, [channelId, userStatus]);
+
   React.useEffect(() => {
     SocketApi.io.on('addedMess', ({ addedMess }) => {
       setMessages([...messages, addedMess]);
