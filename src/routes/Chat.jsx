@@ -5,8 +5,8 @@ import {
 import {
   Header, Icon, Loader, Dimmer, Button,
 } from 'semantic-ui-react';
-import Axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import axios from '../services/api';
 import { SocketApi } from '../services/socketApi';
 import { Channels } from './channels/Channels';
 import { UserInfo } from '../components/userInfo';
@@ -22,31 +22,29 @@ export const Chat = ({ history, match }) => {
   }, [history]);
 
   const fetchChannel = React.useCallback(async (channelId) => {
-    const { data } = await Axios.get(`http://localhost:3002/channels/${channelId}`);
+    const { data } = await axios.get(`http://localhost:3002/channels/${channelId}`);
     return data.channel;
   }, []);
 
   React.useEffect(() => {
-    if (SocketApi.io) {
-      SocketApi.io.on('addedMessChannel', async ({ addedMess, channelId }) => {
-        const channel = await fetchChannel(channelId);
-        toast(<Notification channel={channel} msg={addedMess} />);
-      });
-      return () => SocketApi.io.off('addedMessChannel');
-    }
-  }, [fetchChannel]);
-
-  React.useEffect(() => {
     setLoading(true);
     if (token && !SocketApi.io) {
-      SocketApi.connect(token);
-      setLoading(false);
+      SocketApi.connect(token, () => setLoading(false));
       return () => SocketApi.io.disconnect();
     } if (!token) {
       history.push('/login');
     }
   }, [token, history]);
 
+  React.useEffect(() => {
+    if (SocketApi.io && !loading) {
+      SocketApi.io.on('addedMessChannel', async ({ addedMess, channelId }) => {
+        const channel = await fetchChannel(channelId);
+        toast(<Notification channel={channel} msg={addedMess} />);
+      });
+      return () => SocketApi.io.off('addedMessChannel');
+    }
+  }, [fetchChannel, loading]);
 
   return (
     <div className="w-100 h-100">

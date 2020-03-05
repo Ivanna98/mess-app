@@ -1,8 +1,8 @@
 import React from 'react';
-import Axios from 'axios';
 import {
   Button, Item, TextArea, Form,
 } from 'semantic-ui-react';
+import axios from '../services/api';
 import { Message } from './message';
 import { SocketApi } from '../services/socketApi';
 
@@ -22,7 +22,7 @@ export const Channel = ({ match }) => {
   }, []);
 
   const onFetch = React.useCallback(async () => {
-    const { data } = await Axios.get(`http://localhost:3002/message?channel=${channelId}`);
+    const { data } = await axios.get(`http://localhost:3002/message?channel=${channelId}`);
     setMessages(data.messages);
   }, [channelId]);
 

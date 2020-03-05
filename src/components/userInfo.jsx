@@ -1,8 +1,8 @@
 import React from 'react';
-import Axios from 'axios';
 import {
   Card, Image, Icon, Button,
 } from 'semantic-ui-react';
+import axios from '../services/api';
 
 export const UserInfo = ({ match, history }) => {
   const [userData, setUserData] = React.useState({});
@@ -11,7 +11,7 @@ export const UserInfo = ({ match, history }) => {
   const onClick = React.useCallback(() => history.push('/chat/channels'), [history]);
 
   const onFetch = React.useCallback(async () => {
-    const { data } = await Axios.get(`http://localhost:3002/user/${id}`);
+    const { data } = await axios.get(`http://localhost:3002/user/${id}`);
     setUserData(data.user);
   }, [id]);
 

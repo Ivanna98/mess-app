@@ -1,11 +1,11 @@
 import React from 'react';
-import Axios from 'axios';
 import {
   Link, Route,
 } from 'react-router-dom';
 import {
   Button, Card, Menu, Input,
 } from 'semantic-ui-react';
+import axios from '../../services/api';
 import { SocketApi } from '../../services/socketApi';
 import { Channel } from '../../components/channel';
 import './channels.scss';
@@ -26,7 +26,7 @@ export const Channels = ({ match }) => {
 
   const onFetch = React.useCallback(async () => {
     try {
-      const { data } = await Axios.get('http://localhost:3002/channels');
+      const { data } = await axios.get('http://localhost:3002/channels');
       setChannels(data.channels);
     } catch (error) {
       console.log(error);
