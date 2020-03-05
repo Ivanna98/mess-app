@@ -40,7 +40,7 @@ export const UserInfo = ({ match, history }) => {
           </div>
         )}
       </Card>
-      <Button onClick={onClick}>back</Button>
+      <Button onClick={onClick}>back to channels</Button>
     </div>
   );
 };

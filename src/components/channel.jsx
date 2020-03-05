@@ -11,6 +11,9 @@ export const Channel = ({ match }) => {
   const [messages, setMessages] = React.useState([]);
   const [newMess, setNewMess] = React.useState({});
   const [userStatus, setUserStatus] = React.useState();
+  const [typingData, setTypingData] = React.useState('');
+  const [stateTimeoutId, setStateTimeoutId] = React.useState('');
+
   const { channelId } = match.params;
   const onClick = React.useCallback(() => {
     SocketApi.io.emit('message', { messValue, channelId });
@@ -19,7 +22,17 @@ export const Channel = ({ match }) => {
 
   const onChange = React.useCallback((e) => {
     setMessValue(e.target.value);
+    SocketApi.io.emit('typing');
   }, []);
+
+  const onKeyPress = React.useCallback((e) => {
+    if (e.which !== 13) {
+      SocketApi.io.emit('typing');
+    } else {
+      SocketApi.io.emit('message', { messValue, channelId });
+      setMessValue('');
+    }
+  }, [messValue, channelId]);
 
   const onFetch = React.useCallback(async () => {
     const { data } = await axios.get(`http://localhost:3002/message?channel=${channelId}`);
@@ -36,12 +49,22 @@ export const Channel = ({ match }) => {
 
   React.useEffect(() => {
     SocketApi.io.on('addedMess', ({ addedMess }) => {
-      console.log(addedMess);
       setMessages([...messages, addedMess]);
       setNewMess(addedMess);
     });
     return () => SocketApi.io.off('addedMess');
   }, [newMess, messages]);
+
+  React.useEffect(() => {
+    SocketApi.io.on('userTyping', (name) => {
+      setTypingData(`${name} is typing...`);
+      const timeoutId = setTimeout(() => setTypingData(null), 2000);
+      if (stateTimeoutId) {
+        clearTimeout(timeoutId);
+      }
+      setStateTimeoutId(timeoutId);
+    });
+  }, [typingData]);
 
   return (
 
@@ -57,12 +80,13 @@ export const Channel = ({ match }) => {
           </div>
         ))}
       </Item.Group>
-
-      <Form className="w-100 d-flex justify-content-around sendMess">
-        <TextArea onChange={onChange} value={messValue} placeholder="Enter your message" />
-        <Button onClick={onClick}>Send</Button>
-      </Form>
-
+      <div className="d-flex flex-column justify-content-between">
+        <div className="userTyping">{typingData}</div>
+        <Form className="w-100 d-flex justify-content-around sendMess">
+          <TextArea onChange={onChange} onKeyPress={onKeyPress} value={messValue} placeholder="Enter your message" />
+          <Button onClick={onClick}>Send</Button>
+        </Form>
+      </div>
     </div>
   );
 };

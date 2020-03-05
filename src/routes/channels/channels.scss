@@ -24,7 +24,7 @@
 
 .wrapperMess {
   overflow-y: auto;
-  height: 90%;
+  height: 85%;
 }
 
 .sendMess {
@@ -32,6 +32,10 @@
     height: 42px;
     margin-right: 7px !important;
   }
+}
+
+.userTyping {
+  height: 25px;
 }
 
 .active {
