@@ -27,7 +27,7 @@ export const Channel = ({ match }) => {
 
   const onKeyPress = React.useCallback((e) => {
     if (e.which !== 13) {
-      SocketApi.io.emit('typing');
+      SocketApi.io.emit('typing', channelId);
     } else {
       SocketApi.io.emit('message', { messValue, channelId });
       setMessValue('');
@@ -48,15 +48,15 @@ export const Channel = ({ match }) => {
   }, [channelId, userStatus, onFetch]);
 
   React.useEffect(() => {
-    SocketApi.io.on('addedMess', ({ addedMess }) => {
+    SocketApi.io.on(`addedMess${channelId}`, ({ addedMess }) => {
       setMessages([...messages, addedMess]);
       setNewMess(addedMess);
     });
-    return () => SocketApi.io.off('addedMess');
-  }, [newMess, messages]);
+    return () => SocketApi.io.off(`addedMess${channelId}`);
+  }, [newMess, messages, channelId]);
 
   React.useEffect(() => {
-    SocketApi.io.on('userTyping', (name) => {
+    SocketApi.io.on(`userTyping${channelId}`, (name) => {
       setTypingData(`${name} is typing...`);
       const timeoutId = setTimeout(() => setTypingData(null), 2000);
       if (stateTimeoutId) {
@@ -64,7 +64,8 @@ export const Channel = ({ match }) => {
       }
       setStateTimeoutId(timeoutId);
     });
-  }, [typingData]);
+    return () => SocketApi.io.off(`userTyping${channelId}`);
+  }, [typingData, channelId]);
 
   return (
 
